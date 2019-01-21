@@ -1,0 +1,83 @@
+#include "ESP8266WiFi.h"
+#include <WiFiManager.h>
+
+
+const char server[] = "web.engr.oregonstate.edu";
+
+const char* MY_SSID = "HOME-4C53-2.4";
+const char* MY_PWD =  "3E9NEEAVAE3C9VCE";
+
+//const char* MY_SSID = "ayy_lmaoexe";
+//const char* MY_PWD =  "tim3tooilup";
+
+const char* Status = "ON";
+
+WiFiClient client;
+
+
+void setup()
+{
+  Serial.begin(115200);
+  Serial.print("Connecting to "+*MY_SSID);
+  WiFi.begin(MY_SSID, MY_PWD);
+
+  while (WiFi.status() != WL_CONNECTED) //not connected,  ...waiting to connect
+    {
+      delay(1000);
+      Serial.print(".");
+    }
+
+  Serial.println("Credentials accepted! Connected to wifi\n ");
+}
+
+void loop() {
+
+    Serial.println("\nStarting connection to server...");
+    // if you get a connection, report back via serial:
+    if (client.connect(server, 80)) {
+      Serial.println("connected to server");
+      //WiFi.printDiag(Serial);
+
+
+  Serial.println("\nSending a status to the website");
+
+
+     client.println("POST /~decosted/knowitsoff.php HTTP/1.1");
+     client.print("Host: http://web.engr.oregonstate.edu/~decosted/\n");
+     client.println("User-Agent: ESP8266/1.0");
+     client.println("Connection: close");
+     client.println("Content-Type: application/x-www-form-urlencoded");
+     client.print("Content-Length: ");
+     client.print(strlen(Status));
+     client.print("\n\n");
+     client.print(Status);
+     client.stop();
+
+     Serial.println("\n");
+     Serial.println("My data string im POSTing looks like this: ");
+     Serial.println(Status);
+
+
+
+     delay(60000);   //1 minute
+    }
+
+}
+
+
+void printWifiStatus() {
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your WiFi shield's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
