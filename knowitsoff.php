@@ -10,22 +10,16 @@ date_default_timezone_set("America/Los_Angeles");
 $TimeStamp = "The Time is :" . date("h:i:sa") . "</br>";
 file_put_contents('knowitsoff.html', $TimeStamp, FILE_APPEND);
 
-  #setting the request for status
-  if (isset($_REQUEST['Status']))
-  {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   echo "<div><b> Your systems status : " . $_REQUEST['Status'] . "<div></b>";
-
-
   #set request variable
   $temp = $_REQUEST['Status'];
 
   $WriteMyRequest = "<p> Your systems status: " . $temp . "</p>";
 
-  file_put_contents('knowitsoff.html', $WriteMyRequest, FILE_APPEND);
-
-  }
-
+  file_put_contents('knowitsoff.html', $WriteMyRequest, FILE_APPEND)
+}
 
 ?>
 
